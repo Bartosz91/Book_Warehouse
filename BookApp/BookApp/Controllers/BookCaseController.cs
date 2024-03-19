@@ -7,57 +7,50 @@ namespace Warehouse.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BookCaseController : ControllerBase
+    public class BookCaseController : ApiControllerBase
     {
-        private readonly IMediator mediator;
-
-        public BookCaseController(IMediator mediator)
+        public BookCaseController(IMediator mediator) : base(mediator) 
         {
-            this.mediator = mediator;
         }
 
         [HttpGet]
         [Route("")]
-        public async Task<IActionResult> GetAllBookCasesOrById([FromQuery] int bookCaseId)
+        public Task<IActionResult> GetAllBookCasesOrById([FromQuery] int bookCaseId)
         {
             var request = new GetAllBookCasesOrByIdRequest()
             {
                 BookCaseId = bookCaseId
             };
-            var response = await mediator.Send(request);
-            return Ok(response);
+            return HandleRequest<GetAllBookCasesOrByIdRequest, GetAllBookCasesOrByIdResponse>(request);
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> AddBookCase([FromBody] AddBookCaseRequest request)
+        public Task<IActionResult> AddBookCase([FromBody] AddBookCaseRequest request)
         {
-            var response = await mediator.Send(request);
-            return Ok(response);
+            return HandleRequest<AddBookCaseRequest, AddBookCaseResponse>(request);
         }
 
         [HttpPut]
         [Route("{bookCaseId}")]
-        public async Task<IActionResult> EditBookCase([FromRoute] int bookCaseId)
+        public Task<IActionResult> EditBookCase([FromRoute] int bookCaseId)
         {
             var request = new EditBookCaseRequest()
             {
                 BookCaseId = bookCaseId
             };
-            var response = await mediator.Send(request);
-            return Ok(response);
+            return HandleRequest<EditBookCaseRequest, EditBookCaseResponse>(request);
         }
 
         [HttpDelete]
         [Route("{bookCaseId}")]
-        public async Task<IActionResult> DeleteBookCase([FromRoute] int bookCaseId)
+        public Task<IActionResult> DeleteBookCase([FromRoute] int bookCaseId)
         {
             var request = new DeleteBookCaseRequest()
             {
                 BookCaseId = bookCaseId
             };
-            var response = await mediator.Send(request);
-            return Ok(response);
+            return HandleRequest<DeleteBookCaseRequest, DeleteBookCaseResponse>(request);
         }
     }
 }

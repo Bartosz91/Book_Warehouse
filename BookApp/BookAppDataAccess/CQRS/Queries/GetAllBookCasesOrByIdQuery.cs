@@ -13,7 +13,10 @@ namespace Warehouse.DataAccess.CQRS.Queries
             {
                 return context.BookCases.ToListAsync();
             }
-            return context.BookCases.Where(x => x.Id == BookCaseId).ToListAsync();
+            return context.BookCases
+                .Where(x => x.Id == BookCaseId)
+                .Include(x => x.Books)
+                .ToListAsync();
         }
     }
 }

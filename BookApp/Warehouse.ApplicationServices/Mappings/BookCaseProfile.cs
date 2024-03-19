@@ -18,7 +18,8 @@ namespace Warehouse.ApplicationServices.Mappings
 
             this.CreateMap<Warehouse.DataAccess.Entities.BookCase, API.Domain.Models.BookCase>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
-                .ForMember(x => x.Number, y => y.MapFrom(z => z.Number));
+                .ForMember(x => x.Number, y => y.MapFrom(z => z.Number))
+                .ForMember(x => x.BookTitles, y => y.MapFrom(z => z.Books != null ? z.Books.Select(x => x.Title) : new List<string>()));
                 
         }
     }

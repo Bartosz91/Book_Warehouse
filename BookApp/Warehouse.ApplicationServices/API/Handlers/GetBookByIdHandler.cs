@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using Warehouse.ApplicationServices.API.Domain;
 using Warehouse.ApplicationServices.API.Domain.BookElements;
+using Warehouse.ApplicationServices.API.ErrorHandling;
 using Warehouse.DataAccess.CQRS;
 using Warehouse.DataAccess.CQRS.Queries;
 
@@ -23,6 +25,15 @@ namespace Warehouse.ApplicationServices.API.Handlers
                 Id = request.BookId
             };
             var book = await queryExecutor.Execute(query);
+
+            if (book == null)
+            {
+                return new GetBookByIdResponse()
+                {
+                    Error = new ErrorModel(ErrorType.NotFound)
+                };
+            }
+
             var mappedBook = mapper.Map<Domain.Models.Book>(book);
 
             var response = new GetBookByIdResponse()

@@ -1,5 +1,8 @@
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Warehouse.ApplicationServices.API.Domain;
+using Warehouse.ApplicationServices.API.Validators;
 using Warehouse.ApplicationServices.Mappings;
 using Warehouse.DataAccess;
 using Warehouse.DataAccess.CQRS;
@@ -9,6 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddTransient<IQueryExecutor, QueryExecutor>();
+builder.Services.AddMvcCore().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddBookCaseRequestValidator>());
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddTransient<ICommandExecutor, CommandExecutor>();
 builder.Services.AddAutoMapper(typeof(BookProfile).Assembly);
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
